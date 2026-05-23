@@ -9,8 +9,8 @@ lerna-debug.log*
 # database
 *.sqlite
 
-# package-json
-package-json.lock
+# package-lock
+package-lock.json
 
 # bun deploy file
 node_modules.bun
@@ -111,3 +111,33 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Package manager lock files
+bun.lock
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+deno.lock
+
+# main.js
+main.js
+
+# AI
+.claude/
+.cursor/
+.windsurf/
+.continue/
+.aider/
+.roo/
+.trae/
+.augment/
+.comate/
+.cline/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
