@@ -45,6 +45,7 @@ npm run build
 | `npm run format`     | Prettier 格式化                           |
 | `npm run dist-link`  | 将 dist 软链接到测试仓库的插件目录                   |
 | `npm run clean`      | 清理 dist 和产物文件                          |
+| `npm run clean:dist` | 清理 dist 目录内容（保留目录本身）                   |
 | `npm run clean:deep` | 清理 dist、产物文件和 node_modules             |
 | `npm run version`    | 升级版本号，同步 manifest.json 和 versions.json |
 

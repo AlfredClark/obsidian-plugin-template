@@ -17,8 +17,9 @@
     "lint": "eslint src/",
     "check": "prettier --check '**/*.ts'",
     "format": "prettier --write '**/*.ts'",
-    "clean": "rimraf dist main.js main.js.map",
     "dist-link": "node dist-link.ts",
+    "clean": "rimraf dist main.js main.js.map",
+    "clean:dist": "rimraf dist/*",
     "clean:deep": "rimraf dist main.js main.js.map node_modules",
     "version": "node version-bump.ts && git add manifest.json versions.json"
   },
