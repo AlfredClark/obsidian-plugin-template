@@ -19,5 +19,8 @@ jobs:
       - name: Install
         run: bun install
 
+      - name: I18n Compile
+        run: bun run i18n:compile
+
       - name: Lint
         run: bun run lint

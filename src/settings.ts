@@ -3,7 +3,7 @@ import type TemplatePlugin from "./main";
 import LocaleSettings from "./components/settings/LocaleSettings.svelte";
 import { SvelteComponent } from "./components/utils";
 import { m } from "./i18n/paraglide/messages";
-import { setLocale, type Locale } from "./i18n/paraglide/runtime";
+import { setLocale, toLocale, baseLocale } from "./i18n/paraglide/runtime";
 
 export interface TemplatePluginSettings {
   locale: string;
@@ -34,7 +34,7 @@ export class TemplatePluginSettingTab extends PluginSettingTab {
           locale: this.plugin.settings.locale,
           onLocaleChange: async (locale: string) => {
             this.plugin.settings.locale = locale;
-            await setLocale(locale as Locale, { reload: false });
+            await setLocale(toLocale(locale) ?? baseLocale, { reload: false });
             void this.plugin.saveSettings();
             this.display();
           },

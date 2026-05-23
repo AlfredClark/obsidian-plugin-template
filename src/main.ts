@@ -4,7 +4,7 @@ import {
   type TemplatePluginSettings,
   TemplatePluginSettingTab,
 } from "./settings";
-import { setLocale, type Locale } from "./i18n/paraglide/runtime";
+import { setLocale, baseLocale, toLocale } from "./i18n/paraglide/runtime";
 
 export default class TemplatePlugin extends Plugin {
   settings: TemplatePluginSettings;
@@ -12,9 +12,9 @@ export default class TemplatePlugin extends Plugin {
   async onload() {
     await this.loadSettings();
     if (this.settings.locale === "app") {
-      await setLocale(getLanguage() as Locale, { reload: false });
+      await setLocale(toLocale(getLanguage()) ?? baseLocale, { reload: false });
     } else {
-      await setLocale(this.settings.locale as Locale, { reload: false });
+      await setLocale(toLocale(this.settings.locale) ?? baseLocale, { reload: false });
     }
 
     this.addRibbonIcon("dice", "Sample", (_evt: MouseEvent) => {
