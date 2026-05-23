@@ -2,6 +2,7 @@ import { builtinModules } from "node:module";
 import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { defineConfig } from "vite";
+import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import eslint from "vite-plugin-eslint2";
 
 export default defineConfig(({ mode }) => ({
@@ -20,6 +21,12 @@ export default defineConfig(({ mode }) => ({
     minify: "esbuild",
   },
   plugins: [
+    svelte({
+      compilerOptions: {
+        css: "injected",
+      },
+      preprocess: vitePreprocess(),
+    }),
     eslint(),
     {
       name: "obsidian-plugin-assets",

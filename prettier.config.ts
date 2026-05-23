@@ -10,6 +10,8 @@ const config: Config = {
   bracketSpacing: true,
   arrowParens: "always",
   endOfLine: "lf",
+  plugins: ["prettier-plugin-svelte"],
+  overrides: [{ files: "*.svelte", options: { parser: "svelte" } }],
 };
 
 export default config;

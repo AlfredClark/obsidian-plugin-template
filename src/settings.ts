@@ -1,16 +1,19 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import type TemplatePlugin from "./main";
+import LocaleSettings from "./components/settings/LocaleSettings.svelte";
+import { SvelteComponent } from "./components/utils";
 
 export interface TemplatePluginSettings {
-  mySetting: string;
+  locale: string;
 }
 
 export const DEFAULT_SETTINGS: TemplatePluginSettings = {
-  mySetting: "default",
+  locale: "app",
 };
 
 export class TemplatePluginSettingTab extends PluginSettingTab {
   plugin: TemplatePlugin;
+  #component: SvelteComponent | undefined;
 
   constructor(app: App, plugin: TemplatePlugin) {
     super(app, plugin);
@@ -22,16 +25,26 @@ export class TemplatePluginSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName("Settings #1")
-      .setDesc("It's a secret")
-      .addText((text) =>
-        text
-          .setPlaceholder("Enter your secret")
-          .setValue(this.plugin.settings.mySetting)
-          .onChange(async (value) => {
-            this.plugin.settings.mySetting = value;
-            await this.plugin.saveSettings();
-          }),
-      );
+      .setName("语言 / language")
+      .setDesc("设置系统语言")
+      .addComponent((controlEl) => {
+        const comp = new SvelteComponent(controlEl, LocaleSettings, {
+          locale: this.plugin.settings.locale,
+          onLocaleChange: (locale: string) => {
+            this.plugin.settings.locale = locale;
+            new Notice(locale);
+            void this.plugin.saveSettings();
+          },
+        });
+        this.#component = comp;
+        return comp;
+      });
+  }
+
+  hide(): void {
+    if (this.#component) {
+      this.#component.destroy();
+      this.#component = undefined;
+    }
   }
 }
