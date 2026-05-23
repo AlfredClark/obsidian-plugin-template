@@ -141,3 +141,8 @@ main.js
 *.swo
 *~
 .DS_Store
+
+# Paraglide
+src/i18n/paraglide
+src/i18n/project.inlang
+!src/i18n/project.inlang/settings.json

@@ -37,7 +37,7 @@ export default [
   },
   eslintConfigPrettier,
   {
-    ignores: ["node_modules/", "dist/", "main.js", "main.js.map"],
+    ignores: ["node_modules/", "dist/", "main.js", "main.js.map", "src/i18n/paraglide"],
   },
   {
     rules: {

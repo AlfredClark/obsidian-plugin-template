@@ -1,7 +1,9 @@
-import { App, Notice, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
 import type TemplatePlugin from "./main";
 import LocaleSettings from "./components/settings/LocaleSettings.svelte";
 import { SvelteComponent } from "./components/utils";
+import { m } from "./i18n/paraglide/messages";
+import { setLocale, type Locale } from "./i18n/paraglide/runtime";
 
 export interface TemplatePluginSettings {
   locale: string;
@@ -25,15 +27,16 @@ export class TemplatePluginSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName("语言 / language")
-      .setDesc("设置系统语言")
+      .setName(m.language())
+      .setDesc(m.settings_language())
       .addComponent((controlEl) => {
         const comp = new SvelteComponent(controlEl, LocaleSettings, {
           locale: this.plugin.settings.locale,
-          onLocaleChange: (locale: string) => {
+          onLocaleChange: async (locale: string) => {
             this.plugin.settings.locale = locale;
-            new Notice(locale);
+            await setLocale(locale as Locale, { reload: false });
             void this.plugin.saveSettings();
+            this.display();
           },
         });
         this.#component = comp;

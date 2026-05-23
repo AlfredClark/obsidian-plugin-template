@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { builtinModules } from "node:module";
 import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -21,6 +22,10 @@ export default defineConfig(({ mode }) => ({
     minify: "esbuild",
   },
   plugins: [
+    paraglideVitePlugin({
+      project: "./src/i18n/project.inlang",
+      outdir: "./src/i18n/paraglide",
+    }),
     svelte({
       compilerOptions: {
         css: "injected",

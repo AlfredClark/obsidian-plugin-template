@@ -1,15 +1,21 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin } from "obsidian";
+import { App, Editor, getLanguage, MarkdownView, Modal, Notice, Plugin } from "obsidian";
 import {
   DEFAULT_SETTINGS,
   type TemplatePluginSettings,
   TemplatePluginSettingTab,
 } from "./settings";
+import { setLocale, type Locale } from "./i18n/paraglide/runtime";
 
 export default class TemplatePlugin extends Plugin {
   settings: TemplatePluginSettings;
 
   async onload() {
     await this.loadSettings();
+    if (this.settings.locale === "app") {
+      await setLocale(getLanguage() as Locale, { reload: false });
+    } else {
+      await setLocale(this.settings.locale as Locale, { reload: false });
+    }
 
     this.addRibbonIcon("dice", "Sample", (_evt: MouseEvent) => {
       new Notice("This is a notice!");

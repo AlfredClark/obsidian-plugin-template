@@ -21,7 +21,9 @@
     "clean": "rimraf dist main.js main.js.map",
     "clean:dist": "rimraf dist/*",
     "clean:deep": "rimraf dist main.js main.js.map node_modules",
-    "version": "node version-bump.ts && git add manifest.json versions.json"
+    "version": "node version-bump.ts && git add manifest.json versions.json",
+    "i18n:compile": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/i18n/paraglide",
+    "machine-translate": "inlang machine translate --project src/i18n/project.inlang"
   },
   "dependencies": {
     "obsidian": "latest"
@@ -49,6 +51,8 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.4",
     "vite": "^8.0.14",
-    "vite-plugin-eslint2": "^5.1.0"
+    "vite-plugin-eslint2": "^5.1.0",
+    "@inlang/paraglide-js": "^2.18.1",
+    "@inlang/cli": "^3.0.0"
   }
 }
