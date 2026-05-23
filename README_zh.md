@@ -43,6 +43,7 @@ npm run build
 | `npm run lint`       | ESLint 代码检查                            |
 | `npm run check`      | Prettier 格式检查                          |
 | `npm run format`     | Prettier 格式化                           |
+| `npm run dist-link`  | 将 dist 软链接到测试仓库的插件目录                   |
 | `npm run clean`      | 清理 dist 和产物文件                          |
 | `npm run clean:deep` | 清理 dist、产物文件和 node_modules             |
 | `npm run version`    | 升级版本号，同步 manifest.json 和 versions.json |
@@ -56,6 +57,7 @@ npm run build
 │   └── settings.ts      # 设置接口定义与 SettingTab 实现
 ├── manifest.json        # Obsidian 插件清单
 ├── styles.css           # 插件样式
+├── dist-link.ts         # 将 dist 软链接到测试仓库插件目录
 ├── vite.config.ts       # Vite 构建配置
 ├── tsconfig.json        # TypeScript 配置（仅类型检查）
 ├── version-bump.ts     # 版本号升级脚本

@@ -43,6 +43,7 @@ Place the plugin directory under your Obsidian vault at `.obsidian/plugins/<your
 | `npm run lint`       | Lint source files with ESLint                      |
 | `npm run check`      | Check code formatting with Prettier                |
 | `npm run format`     | Format source files with Prettier                  |
+| `npm run dist-link`  | Symlink dist to test vault plugin directory         |
 | `npm run clean`      | Remove dist and output files                       |
 | `npm run clean:deep` | Remove dist, output files and node_modules         |
 | `npm run version`    | Bump version, sync manifest.json and versions.json |
@@ -56,6 +57,7 @@ Place the plugin directory under your Obsidian vault at `.obsidian/plugins/<your
 │   └── settings.ts      # Settings interface and SettingTab implementation
 ├── manifest.json        # Obsidian plugin manifest
 ├── styles.css           # Plugin styles
+├── dist-link.ts         # Symlink dist to test vault plugin directory
 ├── vite.config.ts       # Vite build configuration
 ├── tsconfig.json        # TypeScript configuration (type check only)
 ├── version-bump.ts     # Version bump script

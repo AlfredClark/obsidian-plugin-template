@@ -1,5 +1,5 @@
 import { builtinModules } from "node:module";
-import { cpSync, existsSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { defineConfig } from "vite";
 import eslint from "vite-plugin-eslint2";
@@ -11,13 +11,11 @@ export default defineConfig(({ mode }) => ({
       formats: ["cjs"],
       fileName: () => "main.js",
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: ["obsidian", "electron", /^@codemirror\//, /^@lezer\//, ...builtinModules],
-      output: {
-        banner: `/* A Vite based Obsidian plugin development template. */`,
-      },
     },
     outDir: "dist",
+    emptyOutDir: false,
     sourcemap: mode === "production" ? false : "inline",
     minify: "esbuild",
   },
@@ -29,11 +27,18 @@ export default defineConfig(({ mode }) => ({
         const outDir = path.resolve(__dirname, "dist");
         if (!existsSync(outDir)) mkdirSync(outDir);
         cpSync("manifest.json", path.join(outDir, "manifest.json"));
-        cpSync("styles.css", path.join(outDir, "styles.css"));
+        const stylesCSS = path.resolve("styles.css");
+        if (existsSync(stylesCSS)) cpSync(stylesCSS, path.join(outDir, "styles.css"));
         const mainJs = path.join(outDir, "main.js");
         if (existsSync(mainJs)) cpSync(mainJs, "main.js");
         const mainJsMap = path.join(outDir, "main.js.map");
         if (existsSync(mainJsMap)) cpSync(mainJsMap, "main.js.map");
+        const hotReload = path.join(outDir, ".hotreload");
+        if (mode === "development") {
+          if (!existsSync(hotReload)) writeFileSync(hotReload, "");
+        } else {
+          if (existsSync(hotReload)) rmSync(hotReload);
+        }
       },
     },
   ],
