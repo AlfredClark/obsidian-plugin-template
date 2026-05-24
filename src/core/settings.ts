@@ -1,21 +1,27 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import type TemplatePlugin from "./main";
-import LocaleSettings from "./components/settings/LocaleSettings.svelte";
-import { SvelteComponent } from "./components/utils";
-import { m } from "./i18n/paraglide/messages";
-import { setLocale, toLocale, baseLocale } from "./i18n/paraglide/runtime";
+import type TemplatePlugin from "../main";
+import LocaleSettings from "../components/settings/LocaleSettings.svelte";
+import { ObsidianSvelteComponent } from "../components/utils";
+import { m } from "../i18n/paraglide/messages";
+import { setLocale, toLocale, baseLocale } from "../i18n/paraglide/runtime";
 
+/** Persisted plugin settings stored via {@link Plugin.loadData} / {@link Plugin.saveData}. */
 export interface TemplatePluginSettings {
   locale: string;
 }
 
+/** Default settings applied on first load or when a new setting key is added. */
 export const DEFAULT_SETTINGS: TemplatePluginSettings = {
   locale: "app",
 };
 
+/**
+ * Settings tab rendered in Obsidian's settings panel.
+ * Uses a Svelte component via {@link ObsidianSvelteComponent} for the locale picker.
+ */
 export class TemplatePluginSettingTab extends PluginSettingTab {
   plugin: TemplatePlugin;
-  #component: SvelteComponent | undefined;
+  #component: ObsidianSvelteComponent | undefined;
 
   constructor(app: App, plugin: TemplatePlugin) {
     super(app, plugin);
@@ -30,7 +36,7 @@ export class TemplatePluginSettingTab extends PluginSettingTab {
       .setName(m.language())
       .setDesc(m.settings_language())
       .addComponent((controlEl) => {
-        const comp = new SvelteComponent(controlEl, LocaleSettings, {
+        const comp = new ObsidianSvelteComponent(controlEl, LocaleSettings, {
           locale: this.plugin.settings.locale,
           onLocaleChange: async (locale: string) => {
             this.plugin.settings.locale = locale;

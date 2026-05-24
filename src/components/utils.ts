@@ -1,27 +1,23 @@
 import { BaseComponent } from "obsidian";
-import { mount, unmount } from "svelte";
+import { mount, Component, unmount } from "svelte";
 
 /**
- * Wraps a Svelte component as an Obsidian {@link BaseComponent} for use with
+ * Bridges a Svelte component into the Obsidian settings UI.
+ *
+ * Wraps a Svelte component as an Obsidian BaseComponent so it can be
+ * passed to `Setting.addComponent`. Handles mount / unmount lifecycle.
  */
-export class SvelteComponent extends BaseComponent {
-  #instance: Record<string, unknown>;
+export class ObsidianSvelteComponent extends BaseComponent {
+  instance: Record<string, unknown>;
   disabled = false;
 
-  constructor(
-    el: HTMLElement,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    component: any,
-    props?: Record<string, unknown>,
-  ) {
+  constructor(el: HTMLElement, component: Component, props?: Record<string, unknown>) {
     super();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    this.#instance = mount(component, { target: el, props });
+    this.instance = mount(component, { target: el, props });
   }
 
-  /** Unmount the inner Svelte component. */
   destroy(): void {
-    void unmount(this.#instance);
+    void unmount(this.instance);
   }
 
   then(cb: (component: this) => unknown): this {
