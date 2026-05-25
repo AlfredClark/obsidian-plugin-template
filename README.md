@@ -64,16 +64,21 @@ Place the plugin directory under your Obsidian vault at `.obsidian/plugins/<your
 ```
 .
 ├── src/
-│   ├── main.ts                         # Plugin entry, registers commands, events, settings tab
+│   ├── main.ts                         # Plugin entry, orchestrates all registrations
 │   ├── svelte-env.d.ts                 # Svelte type declarations for TypeScript
-│   ├── core/                           # Core plugin modules
-│   │   ├── settings.ts                 # Settings interface and SettingTab implementation
-│   │   ├── commands.ts                 # Command registration
-│   │   └── views.ts                    # Sidebar view implementation
+│   ├── core/                           # Core plugin modules (one register* per file)
+│   │   ├── types.ts                    # Types, interfaces, and base ObsidianPlugin class
+│   │   ├── settings.ts                 # Settings load/save logic
+│   │   ├── locales.ts                  # Locale initialization
+│   │   ├── sidebar.ts                  # Sidebar ItemView definition and registration
+│   │   ├── ribbon-icon.ts              # Ribbon icon to toggle sidebar
+│   │   ├── settings-tab.ts             # Plugin settings tab UI
+│   │   └── menu.ts                     # Context menu handlers (file-menu, editor-menu)
 │   ├── components/                     # Svelte components and related tools
-│   │   ├── types.ts                    # Bridge Obsidian Component
+│   │   ├── types.ts                    # Bridge helpers (ObsidianSvelteComponent, HTMLComponent)
 │   │   └── settings/                   # Settings-related components
 │   │       └── LocaleSettings.svelte   # Language switcher component
+│   ├── features/                       # Feature-specific modules
 │   └── i18n/                           # Internationalization
 │       ├── messages/                   # Translation message files (per locale)
 │       ├── paraglide/                  # Compiled Paraglide JS runtime (auto-generated)
@@ -92,7 +97,7 @@ Place the plugin directory under your Obsidian vault at `.obsidian/plugins/<your
 ## Customization
 
 1. Edit `id`, `name`, `description`, `author` etc. in `manifest.json`
-2. Replace `TemplatePlugin` → `YourPluginName` globally (`src/main.ts`, `src/settings.ts`)
+2. Replace `TemplatePlugin` → `YourPluginName` globally (`src/main.ts`, `src/core/`)
 3. Edit translation messages in `src/i18n/messages/` for each locale
 4. Run `npm run i18n:compile` after editing messages
 5. Remove example code from `src/main.ts` and `src/settings.ts` before development

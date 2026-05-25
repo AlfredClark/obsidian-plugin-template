@@ -64,16 +64,21 @@ npm run build
 ```
 .
 ├── src/
-│   ├── main.ts                         # 插件入口，注册命令、事件、设置页
+│   ├── main.ts                         # 插件入口，统合所有注册逻辑
 │   ├── svelte-env.d.ts                 # Svelte 的 TypeScript 类型声明
-│   ├── core/                           # 核心插件模块
-│   │   ├── settings.ts                 # 设置接口定义与 SettingTab 实现
-│   │   ├── commands.ts                 # 命令注册
-│   │   └── views.ts                    # 侧边栏视图实现
+│   ├── core/                           # 核心插件模块（每文件一个 register* 函数）
+│   │   ├── types.ts                    # 类型、接口和 ObsidianPlugin 基类
+│   │   ├── settings.ts                 # 设置加载/保存逻辑
+│   │   ├── locales.ts                  # 语言环境初始化
+│   │   ├── sidebar.ts                  # 侧边栏 ItemView 定义与注册
+│   │   ├── ribbon-icon.ts              # 用于切换侧边栏的功能区图标
+│   │   ├── settings-tab.ts             # 插件设置面板 UI
+│   │   └── menu.ts                     # 上下文菜单处理（文件菜单、编辑器菜单）
 │   ├── components/                     # Svelte 组件及相关工具
-│   │   ├── types.ts                    # 与 Obsidian Component 的桥接
+│   │   ├── types.ts                    # 桥接辅助组件（ObsidianSvelteComponent, HTMLComponent）
 │   │   └── settings/                   # 设置相关组件
 │   │       └── LocaleSettings.svelte   # 语言切换组件
+│   ├── features/                       # 功能特定模块
 │   └── i18n/                           # 国际化
 │       ├── messages/                   # 翻译消息文件（每种语言一个文件）
 │       ├── paraglide/                  # 编译后的 Paraglide JS 运行时（自动生成）
@@ -92,7 +97,7 @@ npm run build
 ## 自定义
 
 1. 在 `manifest.json` 中修改 `id`、`name`、`description`、`author` 等信息
-2. 全局搜索替换 `TemplatePlugin` → `YourPluginName`（`src/main.ts`、`src/settings.ts`）
+2. 全局搜索替换 `TemplatePlugin` → `YourPluginName`（`src/main.ts`、`src/core/`）
 3. 在 `src/i18n/messages/` 中编辑各语言的翻译消息
 4. 编辑消息后运行 `npm run i18n:compile` 重新编译
 5. 开发前清理 `src/main.ts` 和 `src/settings.ts` 中的示例代码
