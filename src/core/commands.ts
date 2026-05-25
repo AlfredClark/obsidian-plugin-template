@@ -1,16 +1,20 @@
-import { App, Editor, MarkdownView, type Command, Modal } from "obsidian";
+import { ObsidianPlugin } from "./types";
+import { Command, Editor, MarkdownView, Modal } from "obsidian";
 
-/**
- * Returns the plugin's command palette entries.
- * Each command is registered via {@link Plugin.addCommand} in `main.ts`.
- */
-export function createCommands(app: App): Command[] {
-  return [
+export async function removeCommands(plugin: ObsidianPlugin) {
+  plugin.commands_ids.forEach((id: string) => {
+    plugin.removeCommand(id);
+  });
+  plugin.commands_ids = [];
+}
+
+export async function registerCommands(plugin: ObsidianPlugin) {
+  const commands: Command[] = [
     {
       id: "open-modal-simple",
       name: "Open modal (simple)",
       callback: () => {
-        new Modal(app).setTitle("Open modal").setContent("Open modal (simple)").open();
+        new Modal(plugin.app).setTitle("Open modal").setContent("Open modal (simple)").open();
       },
     },
     {
@@ -24,10 +28,10 @@ export function createCommands(app: App): Command[] {
       id: "open-modal-complex",
       name: "Open modal (complex)",
       checkCallback: (checking: boolean) => {
-        const markdownView = app.workspace.getActiveViewOfType(MarkdownView);
+        const markdownView = plugin.app.workspace.getActiveViewOfType(MarkdownView);
         if (markdownView) {
           if (!checking) {
-            new Modal(app).setTitle("Open modal").setContent("Open modal (complex)").open();
+            new Modal(plugin.app).setTitle("Open modal").setContent("Open modal (complex)").open();
           }
           return true;
         }
@@ -35,4 +39,8 @@ export function createCommands(app: App): Command[] {
       },
     },
   ];
+  plugin.commands_ids = [];
+  commands.forEach((command) => {
+    plugin.commands_ids.push(plugin.addCommand(command).id);
+  });
 }

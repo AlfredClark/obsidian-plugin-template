@@ -1,105 +1,20 @@
-import { getLanguage, Notice, Plugin } from "obsidian";
-import {
-  DEFAULT_SETTINGS,
-  type TemplatePluginSettings,
-  TemplatePluginSettingTab,
-} from "./core/settings";
-import { createCommands } from "./core/commands";
-import { VIEW_TYPE, TemplateSidebarView } from "./core/views";
-import { setLocale, baseLocale, toLocale } from "./i18n/paraglide/runtime";
+import { ObsidianPlugin } from "./core/types";
+import { registerLocales } from "./core/locales";
+import { registerSettings } from "./core/settings";
+import { registerRibbonIcon } from "./core/ribbon-icon";
+import { registerSidebar } from "./core/sidebar";
+import { registerSettingsTab } from "./core/settings-tab";
+import { registerMenu } from "./core/menu";
+import { registerCommands } from "./core/commands";
 
-/**
- * Main plugin class. Obsidian calls {@link onload} when the plugin is enabled.
- */
-export default class TemplatePlugin extends Plugin {
-  settings: TemplatePluginSettings;
-
+export default class TemplatePlugin extends ObsidianPlugin {
   async onload() {
-    await this.loadSettings();
-
-    /** I18n **/
-    if (this.settings.locale === "app") {
-      await setLocale(toLocale(getLanguage()) ?? baseLocale, { reload: false });
-    } else {
-      await setLocale(toLocale(this.settings.locale) ?? baseLocale, { reload: false });
-    }
-
-    /** Sidebar View **/
-    this.registerView(VIEW_TYPE, (leaf) => new TemplateSidebarView(leaf));
-
-    /** Ribbon Icon **/
-    this.addRibbonIcon("dice", "Open sidebar", (_evt: MouseEvent) => {
-      void this.activateView();
-    });
-
-    /** Status Bar **/
-    const statusBarItemEl = this.addStatusBarItem();
-    statusBarItemEl.setText("Status bar text");
-
-    /** Commands **/
-    for (const cmd of createCommands(this.app)) {
-      this.addCommand(cmd);
-    }
-
-    /** SettingTab  **/
-    this.addSettingTab(new TemplatePluginSettingTab(this.app, this));
-
-    /** Register **/
-    this.registerDomEvent(activeDocument, "click", (_evt: MouseEvent) => {
-      new Notice("Click");
-    });
-    this.registerInterval(window.setInterval(() => new Notice("Interval notice"), 5 * 60 * 1000));
-    this.registerEvent(
-      this.app.workspace.on("file-menu", (menu, file) => {
-        menu.addItem((item) => {
-          item
-            .setTitle("Print file path 👈")
-            .setIcon("document")
-            .onClick(async () => {
-              new Notice(file.path);
-            });
-        });
-      }),
-    );
-    this.registerEvent(
-      this.app.workspace.on("editor-menu", (menu, editor, view) => {
-        menu.addItem((item) => {
-          item
-            .setTitle("Print file path 👈")
-            .setIcon("document")
-            .onClick(async () => {
-              new Notice(view?.file?.path ?? editor.getValue());
-            });
-        });
-      }),
-    );
-  }
-
-  async activateView(): Promise<void> {
-    const { workspace } = this.app;
-
-    const existing = workspace.getLeavesOfType(VIEW_TYPE)[0];
-    if (existing) {
-      await workspace.revealLeaf(existing);
-      return;
-    }
-
-    const leaf = workspace.getRightLeaf(false);
-    if (leaf) {
-      await leaf.setViewState({ type: VIEW_TYPE, active: true });
-      await workspace.revealLeaf(leaf);
-    }
-  }
-
-  async loadSettings() {
-    this.settings = Object.assign(
-      {},
-      DEFAULT_SETTINGS,
-      (await this.loadData()) as Partial<TemplatePluginSettings>,
-    );
-  }
-
-  async saveSettings() {
-    await this.saveData(this.settings);
+    await registerSettings(this);
+    await registerLocales(this);
+    await registerSidebar(this);
+    await registerRibbonIcon(this);
+    await registerSettingsTab(this);
+    await registerMenu(this);
+    await registerCommands(this);
   }
 }
