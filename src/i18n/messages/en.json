@@ -1,5 +1,8 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "language": "Language",
-  "settings_language": "Set the plugin language"
+  "settings_general": "General",
+  "settings_language": "Language",
+  "settings_language_desc": "Set the plugin language",
+  "settings_about": "About",
+  "settings_version": "Version"
 }

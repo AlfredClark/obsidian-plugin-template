@@ -68,7 +68,7 @@ Place the plugin directory under your Obsidian vault at `.obsidian/plugins/<your
 │   ├── settings.ts                     # Settings interface and SettingTab implementation
 │   ├── svelte-env.d.ts                 # Svelte type declarations for TypeScript
 │   ├── components/                     # Svelte components and related tools
-│   │   ├── utils.ts                    # SvelteComponent — bridge Svelte ↔ Obsidian Component
+│   │   ├── types.ts                    # SvelteComponent — bridge Svelte ↔ Obsidian Component
 │   │   └── settings/                   # Specific functions are divided into component types
 │   │       └── LocaleSettings.svelte   # Example: language switcher component
 │   └── i18n/                           # International-related configurations

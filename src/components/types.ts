@@ -30,3 +30,13 @@ export class ObsidianSvelteComponent extends BaseComponent {
     return this;
   }
 }
+
+/**
+ * Create Obsidian BaseComponent by HTML tag and option
+ */
+export class HTMLComponent extends BaseComponent {
+  constructor(el: HTMLElement, tag: keyof HTMLElementTagNameMap, option: DomElementInfo) {
+    super();
+    el.createEl(tag, option);
+  }
+}

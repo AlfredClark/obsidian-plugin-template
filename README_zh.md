@@ -68,7 +68,7 @@ npm run build
 │   ├── settings.ts                     # 设置接口定义与 SettingTab 实现
 │   ├── svelte-env.d.ts                 # Svelte 的 TypeScript 类型声明
 │   ├── components/                     # Svelte 组件及相关工具
-│   │   ├── utils.ts                    # SvelteComponent — Svelte 与 Obsidian Component 的桥接
+│   │   ├── types.ts                    # SvelteComponent — Svelte 与 Obsidian Component 的桥接
 │   │   └── settings/                   # 具体功能划分组件类型
 │   │       └── LocaleSettings.svelte   # 示例：语言切换组件
 │   └── i18n/                           # 国际化相关配置

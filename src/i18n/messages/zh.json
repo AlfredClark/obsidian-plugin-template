@@ -1,5 +1,8 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "language": "语言",
-  "settings_language": "设置插件语言"
+  "settings_general": "常规",
+  "settings_language": "语言",
+  "settings_language_desc": "设置插件语言",
+  "settings_about": "关于",
+  "settings_version": "版本"
 }
