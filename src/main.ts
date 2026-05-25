@@ -5,6 +5,7 @@ import {
   TemplatePluginSettingTab,
 } from "./core/settings";
 import { createCommands } from "./core/commands";
+import { VIEW_TYPE, TemplateSidebarView } from "./core/views";
 import { setLocale, baseLocale, toLocale } from "./i18n/paraglide/runtime";
 
 /**
@@ -23,9 +24,12 @@ export default class TemplatePlugin extends Plugin {
       await setLocale(toLocale(this.settings.locale) ?? baseLocale, { reload: false });
     }
 
+    /** Sidebar View **/
+    this.registerView(VIEW_TYPE, (leaf) => new TemplateSidebarView(leaf));
+
     /** Ribbon Icon **/
-    this.addRibbonIcon("dice", "Sample", (_evt: MouseEvent) => {
-      new Notice("This is a notice!");
+    this.addRibbonIcon("dice", "Open sidebar", (_evt: MouseEvent) => {
+      void this.activateView();
     });
 
     /** Status Bar **/
@@ -45,6 +49,22 @@ export default class TemplatePlugin extends Plugin {
       new Notice("Click");
     });
     this.registerInterval(window.setInterval(() => new Notice("Interval notice"), 5 * 60 * 1000));
+  }
+
+  async activateView(): Promise<void> {
+    const { workspace } = this.app;
+
+    const existing = workspace.getLeavesOfType(VIEW_TYPE)[0];
+    if (existing) {
+      await workspace.revealLeaf(existing);
+      return;
+    }
+
+    const leaf = workspace.getRightLeaf(false);
+    if (leaf) {
+      await leaf.setViewState({ type: VIEW_TYPE, active: true });
+      await workspace.revealLeaf(leaf);
+    }
   }
 
   async loadSettings() {
