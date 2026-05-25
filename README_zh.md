@@ -65,13 +65,16 @@ npm run build
 .
 ├── src/
 │   ├── main.ts                         # 插件入口，注册命令、事件、设置页
-│   ├── settings.ts                     # 设置接口定义与 SettingTab 实现
 │   ├── svelte-env.d.ts                 # Svelte 的 TypeScript 类型声明
+│   ├── core/                           # 核心插件模块
+│   │   ├── settings.ts                 # 设置接口定义与 SettingTab 实现
+│   │   ├── commands.ts                 # 命令注册
+│   │   └── views.ts                    # 侧边栏视图实现
 │   ├── components/                     # Svelte 组件及相关工具
-│   │   ├── types.ts                    # SvelteComponent — Svelte 与 Obsidian Component 的桥接
-│   │   └── settings/                   # 具体功能划分组件类型
-│   │       └── LocaleSettings.svelte   # 示例：语言切换组件
-│   └── i18n/                           # 国际化相关配置
+│   │   ├── types.ts                    # 与 Obsidian Component 的桥接
+│   │   └── settings/                   # 设置相关组件
+│   │       └── LocaleSettings.svelte   # 语言切换组件
+│   └── i18n/                           # 国际化
 │       ├── messages/                   # 翻译消息文件（每种语言一个文件）
 │       ├── paraglide/                  # 编译后的 Paraglide JS 运行时（自动生成）
 │       └── project.inlang/             # inlang 项目配置

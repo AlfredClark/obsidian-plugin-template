@@ -65,13 +65,16 @@ Place the plugin directory under your Obsidian vault at `.obsidian/plugins/<your
 .
 ├── src/
 │   ├── main.ts                         # Plugin entry, registers commands, events, settings tab
-│   ├── settings.ts                     # Settings interface and SettingTab implementation
 │   ├── svelte-env.d.ts                 # Svelte type declarations for TypeScript
+│   ├── core/                           # Core plugin modules
+│   │   ├── settings.ts                 # Settings interface and SettingTab implementation
+│   │   ├── commands.ts                 # Command registration
+│   │   └── views.ts                    # Sidebar view implementation
 │   ├── components/                     # Svelte components and related tools
-│   │   ├── types.ts                    # SvelteComponent — bridge Svelte ↔ Obsidian Component
-│   │   └── settings/                   # Specific functions are divided into component types
-│   │       └── LocaleSettings.svelte   # Example: language switcher component
-│   └── i18n/                           # International-related configurations
+│   │   ├── types.ts                    # Bridge Obsidian Component
+│   │   └── settings/                   # Settings-related components
+│   │       └── LocaleSettings.svelte   # Language switcher component
+│   └── i18n/                           # Internationalization
 │       ├── messages/                   # Translation message files (per locale)
 │       ├── paraglide/                  # Compiled Paraglide JS runtime (auto-generated)
 │       └── project.inlang/             # inlang project configuration
