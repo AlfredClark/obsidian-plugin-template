@@ -1,8 +1,8 @@
 import { ObsidianPlugin } from "./types";
-import { Command, Editor, MarkdownView, Modal } from "obsidian";
+import { Command, Editor, MarkdownView, MarkdownFileInfo, Modal } from "obsidian";
 
 export async function removeCommands(plugin: ObsidianPlugin) {
-  plugin.commands_ids.forEach((id: string) => {
+  plugin.commands_ids?.forEach((id: string) => {
     plugin.removeCommand(id);
   });
   plugin.commands_ids = [];
@@ -20,7 +20,7 @@ export async function addCommands(plugin: ObsidianPlugin) {
     {
       id: "replace-selected",
       name: "Replace selected content",
-      editorCallback: (editor: Editor, _view: MarkdownView) => {
+      editorCallback: (editor: Editor, _view: MarkdownView | MarkdownFileInfo) => {
         editor.replaceSelection("Sample editor command");
       },
     },
@@ -41,6 +41,6 @@ export async function addCommands(plugin: ObsidianPlugin) {
   ];
   plugin.commands_ids = [];
   commands.forEach((command) => {
-    plugin.commands_ids.push(plugin.addCommand(command).id);
+    plugin.commands_ids?.push(plugin.addCommand(command).id);
   });
 }
