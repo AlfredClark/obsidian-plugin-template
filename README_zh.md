@@ -72,7 +72,7 @@ npm run build
 │   │   ├── locales.ts                  # 语言环境初始化
 │   │   ├── sidebar.ts                  # 侧边栏 ItemView 定义与注册
 │   │   ├── ribbon-icon.ts              # 用于切换侧边栏的功能区图标
-│   │   ├── settings-tab.ts             # 插件设置面板 UI
+│   │   ├── setting-tab.ts             # 插件设置面板 UI
 │   │   └── menu.ts                     # 上下文菜单处理（文件菜单、编辑器菜单）
 │   ├── components/                     # Svelte 组件及相关工具
 │   │   ├── types.ts                    # 桥接辅助组件（ObsidianSvelteComponent, HTMLComponent）

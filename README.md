@@ -72,7 +72,7 @@ Place the plugin directory under your Obsidian vault at `.obsidian/plugins/<your
 │   │   ├── locales.ts                  # Locale initialization
 │   │   ├── sidebar.ts                  # Sidebar ItemView definition and registration
 │   │   ├── ribbon-icon.ts              # Ribbon icon to toggle sidebar
-│   │   ├── settings-tab.ts             # Plugin settings tab UI
+│   │   ├── setting-tab.ts             # Plugin settings tab UI
 │   │   └── menu.ts                     # Context menu handlers (file-menu, editor-menu)
 │   ├── components/                     # Svelte components and related tools
 │   │   ├── types.ts                    # Bridge helpers (ObsidianSvelteComponent, HTMLComponent)

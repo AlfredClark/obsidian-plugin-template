@@ -1,7 +1,7 @@
 import { ObsidianPlugin } from "./types";
 import { VIEW_TYPE } from "./sidebar";
 
-export async function registerRibbonIcon(plugin: ObsidianPlugin) {
+export async function addRibbonIcon(plugin: ObsidianPlugin) {
   plugin.addRibbonIcon("dice", "Open sidebar", async (_evt: MouseEvent) => {
     const { workspace } = plugin.app;
 

@@ -10,6 +10,6 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export class ObsidianPlugin extends Plugin {
-  settings: Settings;
+  declare settings: Settings;
   commands_ids: string[];
 }

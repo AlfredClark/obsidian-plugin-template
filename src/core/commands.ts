@@ -8,7 +8,7 @@ export async function removeCommands(plugin: ObsidianPlugin) {
   plugin.commands_ids = [];
 }
 
-export async function registerCommands(plugin: ObsidianPlugin) {
+export async function addCommands(plugin: ObsidianPlugin) {
   const commands: Command[] = [
     {
       id: "open-modal-simple",
