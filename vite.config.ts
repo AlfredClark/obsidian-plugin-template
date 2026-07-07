@@ -2,7 +2,7 @@ import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { builtinModules } from "node:module";
 import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import eslint from "vite-plugin-eslint2";
 
@@ -52,6 +52,6 @@ export default defineConfig(({ mode }) => ({
           if (existsSync(hotReload)) rmSync(hotReload);
         }
       },
-    },
+    } satisfies Plugin,
   ],
 }));
