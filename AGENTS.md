@@ -1,269 +1,89 @@
-# Obsidian community plugin
+# Template Plugin — 开发规范
 
-## Project overview
+## 项目概览
 
-- Target: Obsidian Community Plugin (TypeScript → bundled JavaScript).
-- Entry point: `src/main.ts` compiled to `main.js` and loaded by Obsidian.
-- Required release artifacts: `main.js`, `manifest.json`, and optional `styles.css`.
+- Obsidian 社区插件模板：TypeScript → esbuild → `main.js`
+- 发布产物：`main.js` / `manifest.json` / `styles.css`（位于根目录，GitHub Release 使用）
+- 插件 ID：`template-plugin`；许可证：GPL-3.0-only
 
-## Environment & tooling
+## 技术栈
 
-- Node.js: use current LTS (Node 18+ recommended).
-- **Package manager: npm** (required for this sample - `package.json` defines npm scripts and dependencies).
-- **Bundler: esbuild** (required for this sample - `esbuild.config.mjs` and build scripts depend on it). Alternative bundlers like Rollup or webpack are acceptable for other projects if they bundle all external dependencies into `main.js`.
-- Types: `obsidian` type definitions.
+- **bun**：包管理器（锁文件 `bun.lock`）
+- **TypeScript 6**：原生编译器，仅用于类型检查（`tsc -noEmit`）
+- **esbuild 0.28**：CJS 打包；`obsidian`/`electron`/`@codemirror/*`/`@lezer/*`/node 内置模块外部化
+- **ESLint 10 + eslint-plugin-obsidianmd**：Obsidian 专用规则
+- **Stylelint 17 + stylelint-config-standard**：CSS 专用检查
+- **Prettier 3 + stylelint**：统一代码格式（`bun run format`）
 
-**Note**: This sample project has specific technical dependencies on npm and esbuild. If you're creating a plugin from scratch, you can choose different tools, but you'll need to replace the build configuration accordingly.
+## 常用命令
 
-### Install
+| 命令                   | 作用                                                   |
+| ---------------------- | ------------------------------------------------------ |
+| `bun run dev`          | 监听 src 与静态资源 → 构建并同步 dist                  |
+| `bun run build`        | 类型检查 + 生产构建 + 同步 dist                        |
+| `bun run lint`         | ESLint 检查（提交前必须零错误）                        |
+| `bun run format`       | Prettier + stylelint 格式化全部代码                    |
+| `bun run format:check` | Prettier + stylelint 检查（提交前必须通过）            |
+| `bun run version`      | 版本提升（package.json → manifest.json/versions.json） |
+| `bun run link <路径>`  | 将 dist 链接到 vault 插件目录（默认启用热重载）        |
+| `bun run unlink`       | 取消链接                                               |
 
-```bash
-npm install
-```
+## 目录结构
 
-### Dev (watch)
+- `src/main.ts`：插件入口，保持最小化，仅做功能注册聚合
+- `src/cores/<模块>/`：核心能力（跨功能共享的基础设施，如设置、工具类）
+  - `index.ts`：统一出口（仅 re-export）
+  - `types.ts`：类型定义
+  - `core.ts`：核心逻辑
+- `src/features/<模块>/`：业务功能（用户可感知的具体功能，如命令、视图）
+  - `index.ts`：统一出口（仅 re-export）
+  - `types.ts`：类型定义
+  - `core.ts`：核心逻辑
+- `scripts/`：构建辅助脚本（不得被插件运行时引用）
+- `dist/`：构建产物副本（gitignore，可 link 至 vault）
 
-```bash
-npm run dev
-```
+## 代码规范
 
-### Production build
+1. **命名**：类/接口 PascalCase，函数/变量 camelCase，常量 UPPER_SNAKE_CASE，文件 kebab-case
+2. **类型**：strict 全开（含 `noUncheckedIndexedAccess`）；禁止 `any` 与隐式 any
+3. **模块组织**：`cores/`（核心能力）与 `features/`（业务功能）均按三段式组织；`index.ts` 仅做 re-export；避免循环导入
+4. **注释**：中文，写"为什么"而非"是什么"；不做多余注释
+5. **移动端约束**：禁止 `import node:*` 与 Electron API（`obsidianmd/no-nodejs-modules` 规则）
+6. **新增依赖**：确认可 bundle 或需加入 esbuild `external` 列表
+7. **格式**：由 `.prettierrc` 统一控制——2 空格缩进、双引号、128 列、LF 行尾（与 `.editorconfig` 一致）
 
-```bash
-npm run build
-```
+## 提交规范（Conventional Commits，与 cliff.toml 对齐）
 
-## Linting
+- 格式：`<type>(<scope>): <描述>`（type 用英文标准前缀，描述用中文）
+- 类型映射：
 
-- ESLint is preconfigured with `eslint-plugin-obsidianmd` for Obsidian-specific rules.
-- Run `npm run lint` to lint the project.
-- A GitHub Action automatically lints every commit on all branches.
+  | type           | 分组      |
+  | -------------- | --------- |
+  | `feat`         | 新功能    |
+  | `fix`          | 缺陷修复  |
+  | `doc`          | 文档      |
+  | `perf`         | 性能优化  |
+  | `refactor`     | 重构      |
+  | `style`        | 样式/格式 |
+  | `test`         | 测试      |
+  | `chore` / `ci` | 杂务/CI   |
+  | `revert`       | 回滚      |
 
-## File & folder conventions
+- breaking change 使用 `!` 或 `BREAKING CHANGE:` 标记
+- 禁止提交：`main.js`、`dist/`、`data.json`、`*.map`、`node_modules`
 
-- **Organize code into multiple files**: Split functionality across separate modules rather than putting everything in `main.ts`.
-- Source lives in `src/`. Keep `main.ts` small and focused on plugin lifecycle (loading, unloading, registering commands).
-- **Example file structure**:
-    ```
-    src/
-      main.ts           # Plugin entry point, lifecycle management
-      settings.ts       # Settings interface and defaults
-      commands/         # Command implementations
-        command1.ts
-        command2.ts
-      ui/              # UI components, modals, views
-        modal.ts
-        view.ts
-      utils/           # Utility functions, helpers
-        helpers.ts
-        constants.ts
-      types.ts         # TypeScript interfaces and types
-    ```
-- **Do not commit build artifacts**: Never commit `node_modules/`, `main.js`, or other generated files to version control.
-- Keep the plugin small. Avoid large dependencies. Prefer browser-compatible packages.
-- Generated output should be placed at the plugin root or `dist/` depending on your build setup. Release artifacts must end up at the top level of the plugin folder in the vault (`main.js`, `manifest.json`, `styles.css`).
+## 代理行为约束（AI 助手）
 
-## Manifest rules (`manifest.json`)
+1. 修改代码前先阅读相关文件与本规范
+2. 每次修改后必须运行 `bun run format` 与 `bun run lint` 验证通过
+3. 依赖变更统一通过 `bun install`，不手动修改 `bun.lock`
+4. 版本变更使用 `bun run version`，不手动修改 manifest 版本
+5. 格式统一使用 `bun run format`，提交前 `bun run format:check` 必须通过
+6. 不提交用户未要求的变更（如无关格式化）
+7. 提交信息遵循"提交规范"一节，只提供提交信息，提交由用户手动进行
 
-- Must include (non-exhaustive):
-    - `id` (plugin ID; for local dev it should match the folder name)
-    - `name`
-    - `version` (Semantic Versioning `x.y.z`)
-    - `minAppVersion`
-    - `description`
-    - `isDesktopOnly` (boolean)
-    - Optional: `author`, `authorUrl`, `fundingUrl` (string or map)
-- Never change `id` after release. Treat it as stable API.
-- Keep `minAppVersion` accurate when using newer APIs.
-- Canonical requirements are coded here: https://github.com/obsidianmd/obsidian-releases/blob/master/.github/workflows/validate-plugin-entry.yml
+## 构建与发布
 
-## Testing
-
-- Manual install for testing: copy `main.js`, `manifest.json`, `styles.css` (if any) to:
-    ```
-    <Vault>/.obsidian/plugins/<plugin-id>/
-    ```
-- Reload Obsidian and enable the plugin in **Settings → Community plugins**.
-
-## Commands & settings
-
-- Any user-facing commands should be added via `this.addCommand(...)`.
-- If the plugin has configuration, provide a settings tab and sensible defaults.
-- Persist settings using `this.loadData()` / `this.saveData()`.
-- Use stable command IDs; avoid renaming once released.
-
-## Versioning & releases
-
-- Bump `version` in `manifest.json` (SemVer) and update `versions.json` to map plugin version → minimum app version.
-- Create a GitHub release whose tag exactly matches `manifest.json`'s `version`. Do not use a leading `v`.
-- Attach `manifest.json`, `main.js`, and `styles.css` (if present) to the release as individual assets.
-- After the initial release, follow the process to add/update your plugin in the community catalog as required.
-
-## Security, privacy, and compliance
-
-Follow Obsidian's **Developer Policies** and **Plugin Guidelines**. In particular:
-
-- Default to local/offline operation. Only make network requests when essential to the feature.
-- No hidden telemetry. If you collect optional analytics or call third-party services, require explicit opt-in and document clearly in `README.md` and in settings.
-- Never execute remote code, fetch and eval scripts, or auto-update plugin code outside of normal releases.
-- Minimize scope: read/write only what's necessary inside the vault. Do not access files outside the vault.
-- Clearly disclose any external services used, data sent, and risks.
-- Respect user privacy. Do not collect vault contents, filenames, or personal information unless absolutely necessary and explicitly consented.
-- Avoid deceptive patterns, ads, or spammy notifications.
-- Register and clean up all DOM, app, and interval listeners using the provided `register*` helpers so the plugin unloads safely.
-
-## UX & copy guidelines (for UI text, commands, settings)
-
-- Prefer sentence case for headings, buttons, and titles.
-- Use clear, action-oriented imperatives in step-by-step copy.
-- Use **bold** to indicate literal UI labels. Prefer "select" for interactions.
-- Use arrow notation for navigation: **Settings → Community plugins**.
-- Keep in-app strings short, consistent, and free of jargon.
-
-## Performance
-
-- Keep startup light. Defer heavy work until needed.
-- Avoid long-running tasks during `onload`; use lazy initialization.
-- Batch disk access and avoid excessive vault scans.
-- Debounce/throttle expensive operations in response to file system events.
-
-## Coding conventions
-
-- TypeScript with `"strict": true` preferred.
-- **Keep `main.ts` minimal**: Focus only on plugin lifecycle (onload, onunload, addCommand calls). Delegate all feature logic to separate modules.
-- **Split large files**: If any file exceeds ~200-300 lines, consider breaking it into smaller, focused modules.
-- **Use clear module boundaries**: Each file should have a single, well-defined responsibility.
-- Bundle everything into `main.js` (no unbundled runtime deps).
-- Avoid Node/Electron APIs if you want mobile compatibility; set `isDesktopOnly` accordingly.
-- Prefer `async/await` over promise chains; handle errors gracefully.
-
-## Mobile
-
-- Where feasible, test on iOS and Android.
-- Don't assume desktop-only behavior unless `isDesktopOnly` is `true`.
-- Avoid large in-memory structures; be mindful of memory and storage constraints.
-
-## Agent do/don't
-
-**Do**
-
-- Add commands with stable IDs (don't rename once released).
-- Provide defaults and validation in settings.
-- Write idempotent code paths so reload/unload doesn't leak listeners or intervals.
-- Use `this.register*` helpers for everything that needs cleanup.
-
-**Don't**
-
-- Introduce network calls without an obvious user-facing reason and documentation.
-- Ship features that require cloud services without clear disclosure and explicit opt-in.
-- Store or transmit vault contents unless essential and consented.
-
-## Common tasks
-
-### Organize code across multiple files
-
-**main.ts** (minimal, lifecycle only):
-
-```ts
-import { Plugin } from 'obsidian';
-import { MySettings, DEFAULT_SETTINGS } from './settings';
-import { registerCommands } from './commands';
-
-export default class MyPlugin extends Plugin {
-	settings!: MySettings;
-
-	async onload() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			(await this.loadData()) as Partial<MySettings>,
-		);
-		registerCommands(this);
-	}
-}
-```
-
-**settings.ts**:
-
-```ts
-export interface MySettings {
-	enabled: boolean;
-	apiKey: string;
-}
-
-export const DEFAULT_SETTINGS: MySettings = {
-	enabled: true,
-	apiKey: '',
-};
-```
-
-**commands/index.ts**:
-
-```ts
-import { Plugin } from 'obsidian';
-import { doSomething } from './my-command';
-
-export function registerCommands(plugin: Plugin) {
-	plugin.addCommand({
-		id: 'do-something',
-		name: 'Do something',
-		callback: () => doSomething(plugin),
-	});
-}
-```
-
-### Add a command
-
-```ts
-this.addCommand({
-	id: 'your-command-id',
-	name: 'Do the thing',
-	callback: () => this.doTheThing(),
-});
-```
-
-### Persist settings
-
-```ts
-interface MySettings { enabled: boolean }
-const DEFAULT_SETTINGS: MySettings = { enabled: true };
-
-async onload() {
-  this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<MySettings>);
-  await this.saveData(this.settings);
-}
-```
-
-### Register listeners safely
-
-```ts
-this.registerEvent(
-	this.app.workspace.on('file-open', (f) => {
-		/* ... */
-	}),
-);
-this.registerDomEvent(activeWindow, 'resize', () => {
-	/* ... */
-});
-this.registerInterval(
-	window.setInterval(() => {
-		/* ... */
-	}, 1000),
-);
-```
-
-## Troubleshooting
-
-- Plugin doesn't load after build: ensure `main.js` and `manifest.json` are at the top level of the plugin folder under `<Vault>/.obsidian/plugins/<plugin-id>/`.
-- Build issues: if `main.js` is missing, run `npm run build` or `npm run dev` to compile your TypeScript source code.
-- Commands not appearing: verify `addCommand` runs after `onload` and IDs are unique.
-- Settings not persisting: ensure `loadData`/`saveData` are awaited and you re-render the UI after changes.
-- Mobile-only issues: confirm you're not using desktop-only APIs; check `isDesktopOnly` and adjust.
-
-## References
-
-- Obsidian sample plugin: https://github.com/obsidianmd/obsidian-sample-plugin
-- API documentation: https://docs.obsidian.md
-- Developer policies: https://docs.obsidian.md/Developer+policies
-- Plugin guidelines: https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines
-- Style guide: https://help.obsidian.md/style-guide
+- **开发热重载**：`bun run link <vault>/.obsidian/plugins/template-plugin` + `bun run dev`，配合 obsidian-hot-reload 插件自动重载
+- **版本流程**：`bun run version`（读 package.json 版本 → 更新 manifest.json/versions.json）
+- **Release**：打 tag 触发 GitHub Action（bun 环境）自动构建，产物取自根目录
