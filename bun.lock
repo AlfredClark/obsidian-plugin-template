@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "template-plugin",
+      "name": "obsidian-plugin-template",
       "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@types/node": "^26.2.0",

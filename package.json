@@ -1,5 +1,5 @@
 {
-  "name": "template-plugin",
+  "name": "obsidian-plugin-template",
   "version": "0.1.0",
   "description": "Obsidian plugin development template",
   "license": "GPL-3.0-only",
@@ -20,14 +20,14 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
-    "link": "bun scripts/link-dist.ts --hotreload",
-    "unlink": "bun scripts/unlink-dist.ts",
     "dev": "bun esbuild.config.ts",
     "build": "tsc -noEmit -skipLibCheck && bun esbuild.config.ts production",
-    "version": "bun scripts/version-bump.ts && git add manifest.json versions.json",
     "lint": "eslint .",
     "format": "prettier --write . && stylelint \"**/*.css\" --fix",
-    "format:check": "prettier --check . && stylelint \"**/*.css\""
+    "format:check": "prettier --check . && stylelint \"**/*.css\"",
+    "version": "bun scripts/version-bump.ts && git add manifest.json versions.json",
+    "link": "bun scripts/link-dist.ts --hotreload",
+    "unlink": "bun scripts/unlink-dist.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
