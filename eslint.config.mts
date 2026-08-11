@@ -1,38 +1,32 @@
 import obsidianmd from "eslint-plugin-obsidianmd";
 import svelte from "eslint-plugin-svelte";
-import globals from "globals";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import { parser } from "typescript-eslint";
 import { globalIgnores, defineConfig } from "eslint/config";
 
 export default defineConfig(
-  globalIgnores([
-    "node_modules",
-    "dist",
-    "esbuild.config.ts",
-    "scripts/*.ts",
-    "versions.json",
-    "main.js",
-    "package.json",
-    "tsconfig.json",
-  ]),
+  globalIgnores(["node_modules", "dist", "esbuild.config.ts", "scripts/*.ts", "versions.json", "main.js", "tsconfig.json"]),
   {
     languageOptions: {
-      globals: {
-        ...globals.browser,
-      },
       parserOptions: {
         projectService: {
           allowDefaultProject: ["manifest.json"],
         },
-        // 基于配置文件自身位置解析，不依赖进程 cwd，IDE 与 CLI 行为一致
-        tsconfigRootDir: decodeURIComponent(new URL(".", import.meta.url).pathname),
+        // 基于配置文件自身位置解析，不依赖进程 cwd，IDE 与 CLI 行为一致；
+        // import.meta.dirname（Node 20.11+）无 Windows 路径编码问题
+        tsconfigRootDir: import.meta.dirname,
         extraFileExtensions: [".json", ".svelte"],
       },
     },
   },
-  ...obsidianmd.configs.recommended,
+  ...obsidianmd.configs.recommendedWithLocalesEn,
   ...svelte.configs["flat/recommended"],
+  {
+    files: ["package.json"],
+    // package.json 以 json 语言解析（obsidianmd 官方块），无 svelte 解析上下文，
+    // svelte flat/recommended 中未限定 files 的规则会因 parserServices 缺失而崩溃
+    rules: Object.fromEntries(Object.keys(svelte.rules).map((name) => [`svelte/${name}`, "off"])),
+  },
   {
     files: ["**/*.svelte"],
     languageOptions: {
