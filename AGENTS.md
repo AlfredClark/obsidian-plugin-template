@@ -66,8 +66,8 @@
 ### i18n（国际化）
 
 - 手动实现，零第三方依赖；`t(key, vars?)` 为全局翻译入口，支持 `{name}` 插值，键由 `TranslationKey` 类型自动推导
-- 语言解析优先级：`settings.language`（system/en/zh-CN/zh-TW）→ `system` 依据 Obsidian 应用语言（`getLanguage()`）判定，未知语言回退 en
-- 语言资源位于 `locales/`：`en.ts` 为类型源（as const，推导 `TranslationResource`）；`zh.ts` 导出简体 `zhCN` 与繁体 `zhTW`，标注 `TranslationResource` 强制与英文键同构，增删键即编译报错
+- 语言解析优先级：`settings.language`（system/en/zh/zh-TW）→ `system` 依据 Obsidian 应用语言（`getLanguage()`）判定，未知语言回退 en
+- 语言资源位于 `locales/`：`en.ts` 为类型源（as const，推导 `TranslationResource`）；`zh.ts` 导出简体 `zh` 与繁体 `zhTW`，标注 `TranslationResource` 强制与英文键同构，增删键即编译报错
 - 添加新语言步骤：
   1. 新建 `locales/<标识>.ts`，按 `en.ts` 结构书写并标注 `TranslationResource`（缺失键即编译报错）
   2. `types.ts`：`PluginLanguage`/`SupportedLanguage` 追加语言标识

@@ -122,7 +122,7 @@ bun run build
 ### 界面国际化
 
 1. 在 `src/cores/i18n/locales/en.ts` 添加键（类型源）
-2. 在 `src/cores/i18n/locales/zh.ts` 同步镜像（`zhCN` 与 `zhTW`）— `TranslationResource` 类型在编译期强制键完全同构
+2. 在 `src/cores/i18n/locales/zh.ts` 同步镜像（`zh` 与 `zh-TW`）— `TranslationResource` 类型在编译期强制键完全同构
 3. 任意位置使用 `t("键.路径", { 变量 })`，编辑器自动补全
 4. 添加新语言：新建语言资源文件，然后在 `i18n/types.ts`、`i18n/core.ts` 与设置页下拉选项中注册
 

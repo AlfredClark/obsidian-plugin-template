@@ -1,13 +1,13 @@
 import { getLanguage } from "obsidian";
 import type TemplatePlugin from "../../main";
 import type { SupportedLanguage, TranslationKey, TranslationResource } from "./types";
-import { zhCN, zhTW } from "./locales/zh";
+import { zh, zhTW } from "./locales/zh";
 import en from "./locales/en";
 
 /** 语言标识到资源的映射；带连字符的标识为对象键需要引号 */
 const LOCALES: Record<SupportedLanguage, TranslationResource> = {
   en,
-  "zh-CN": zhCN,
+  zh,
   "zh-TW": zhTW,
 };
 
@@ -39,14 +39,14 @@ export function t(key: TranslationKey, vars?: Record<string, string | number>): 
 
 /**
  * 解析当前生效语言：显式语言直接使用；system 依据 Obsidian 界面语言判断，
- * 繁体区域（zh-TW/zh-HK/zh-MO）归入 zh-TW，其余中文归入 zh-CN，未知语言回退英文。
+ * 繁体区域（zh-TW/zh-HK/zh-MO）归入 zh-TW，其余中文归入 zh，未知语言回退英文。
  */
 function getCurrentLocale(): SupportedLanguage {
   const setting = pluginRef?.settings.language ?? "system";
   if (setting === "system") {
     const appLanguage = getLanguage();
     if (/^zh-(TW|HK|MO)$/.test(appLanguage)) return "zh-TW";
-    return appLanguage.startsWith("zh") ? "zh-CN" : "en";
+    return appLanguage.startsWith("zh") ? "zh" : "en";
   }
   return setting;
 }

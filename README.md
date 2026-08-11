@@ -122,7 +122,7 @@ For full conventions (naming, module structure, commit rules), see [AGENTS.md](A
 ### Internationalize the UI
 
 1. Add keys to `src/cores/i18n/locales/en.ts` (the type source)
-2. Mirror them in `src/cores/i18n/locales/zh.ts` (`zhCN` and `zhTW`) — the `TranslationResource` type enforces structural equality at compile time
+2. Mirror them in `src/cores/i18n/locales/zh.ts` (`zh` and `zh-TW`) — the `TranslationResource` type enforces structural equality at compile time
 3. Use `t("key.path", { vars })` anywhere; keys are auto-completed by the editor
 4. To add a new language: create a locale file, then register it in `i18n/types.ts`, `i18n/core.ts`, and the settings dropdown options
 

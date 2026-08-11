@@ -60,7 +60,7 @@ export class SettingsTab extends PluginSettingTab {
               options: {
                 system: t("settings.languageOptions.system"),
                 en: t("settings.languageOptions.en"),
-                "zh-CN": t("settings.languageOptions.zh-CN"),
+                zh: t("settings.languageOptions.zh"),
                 "zh-TW": t("settings.languageOptions.zh-TW"),
               },
             },

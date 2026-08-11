@@ -1,7 +1,7 @@
 import type { TranslationResource } from "../types";
 
 /** 简体中文资源。标注 TranslationResource 强制与英文同构，键缺失或多余都会编译报错 */
-export const zhCN: TranslationResource = {
+export const zh: TranslationResource = {
   settings: {
     collapsible: "折叠分组",
     collapsibleDesc: "是否折叠设置分组",
@@ -11,7 +11,7 @@ export const zhCN: TranslationResource = {
     languageOptions: {
       system: "跟随系统",
       en: "英文",
-      "zh-CN": "简体中文",
+      zh: "简体中文",
       "zh-TW": "繁体中文",
     },
   },
@@ -28,7 +28,7 @@ export const zhTW: TranslationResource = {
     languageOptions: {
       system: "跟隨系統",
       en: "英文",
-      "zh-CN": "簡體中文",
+      zh: "簡體中文",
       "zh-TW": "繁體中文",
     },
   },

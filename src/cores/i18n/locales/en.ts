@@ -9,7 +9,7 @@ const en = {
     languageOptions: {
       system: "Follow system",
       en: "English",
-      "zh-CN": "简体中文",
+      zh: "简体中文",
       "zh-TW": "繁體中文",
     },
   },

@@ -1,10 +1,10 @@
 import type en from "./locales/en";
 
 /** 插件界面语言设置项的可选值（system 表示跟随 Obsidian 界面语言） */
-export type PluginLanguage = "system" | "en" | "zh-CN" | "zh-TW";
+export type PluginLanguage = "system" | "en" | "zh" | "zh-TW";
 
 /** 实际支持的语言，en 为缺省回退语言 */
-export type SupportedLanguage = "en" | "zh-CN" | "zh-TW";
+export type SupportedLanguage = "en" | "zh" | "zh-TW";
 
 /** 递归将资源叶子类型放宽为 string，供其他语言资源标注用（结构同构强制、值不限字面量） */
 type DeepStringify<T> = {
