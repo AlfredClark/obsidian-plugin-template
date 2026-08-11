@@ -79,8 +79,8 @@ export class SettingsTab extends PluginSettingTab {
     ];
   }
 
-  async setControlValue(key: string, value: unknown) {
-    super.setControlValue(key, value);
-    this.update();
+  setControlValue(key: string, value: unknown) {
+    void super.setControlValue(key, value);
+    void this.update();
   }
 }
