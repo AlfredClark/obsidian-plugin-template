@@ -1,4 +1,5 @@
 import esbuild from "esbuild";
+import esbuildSvelte from "esbuild-svelte";
 import process from "node:process";
 import { builtinModules } from "node:module";
 import { copyFileSync, mkdirSync, watch } from "node:fs";
@@ -28,6 +29,8 @@ const context = await esbuild.context({
   },
   entryPoints: ["src/main.ts"],
   bundle: true,
+  // css 必须内联进 JS：插件发布仅含 main.js，外部 css 无法随包分发
+  plugins: [esbuildSvelte({ compilerOptions: { css: "injected", dev: !prod } })],
   external: [
     "obsidian",
     "electron",

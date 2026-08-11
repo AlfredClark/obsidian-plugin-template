@@ -16,5 +16,5 @@
     "allowSyntheticDefaultImports": true,
     "lib": ["ESNext", "DOM"]
   },
-  "include": ["src/**/*.ts", "eslint.config.mts", "esbuild.config.ts", "scripts/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.svelte", "eslint.config.mts", "esbuild.config.ts", "scripts/*.ts"]
 }

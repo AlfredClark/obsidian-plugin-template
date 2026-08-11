@@ -11,6 +11,7 @@
 - **bun**：包管理器（锁文件 `bun.lock`）
 - **TypeScript 6**：原生编译器，仅用于类型检查（`tsc -noEmit`）
 - **esbuild 0.28**：CJS 打包；`obsidian`/`electron`/`@codemirror/*`/`@lezer/*`/node 内置模块外部化
+- **Svelte 5**：UI 组件框架；esbuild-svelte 编译 `.svelte`（`css: "injected"` 内联进 JS），svelte-check 类型检查，eslint-plugin-svelte/prettier-plugin-svelte 配套
 - **ESLint 10 + eslint-plugin-obsidianmd**：Obsidian 专用规则
 - **Stylelint 17 + stylelint-config-standard**：CSS 专用检查
 - **Prettier 3 + stylelint**：统一代码格式（`bun run format`）
@@ -40,6 +41,7 @@
 │   │   │   └── locales/     # 语言资源目录（文件说明见核心能力）
 │   │   └── settings/        # 设置模块：持久化设置 + 声明式设置页
 │   ├── features/            # 业务功能：用户可感知的具体功能（暂无模块）
+│   ├── utils/               # 无状态纯函数工具（如 svelte 组件挂载，说明见核心能力）
 │   └── main.ts              # 插件入口：仅调用 initCores()/initFeatures() 聚合初始化
 ├── .editorconfig            # 编辑器统一格式（与 .prettierrc 对齐）
 ├── .gitignore               # git 忽略（main.js/dist/data.json/*.map 等）
@@ -79,6 +81,13 @@
 - `DEFAULT_SETTINGS` 提供默认值，`loadSettings` 从 data.json 读取后与默认值浅合并（展开运算，避免共享默认对象被意外修改），旧版本缺字段时自动兜底
 - 设置页使用 1.13.0+ 声明式 API（`getSettingDefinitions`），读写 `plugin.settings` 与持久化由 Obsidian 自动完成；覆写 `setControlValue` 触发 `update()` 重渲染，语言切换等联动即时生效
 - 依赖 i18n 模块：界面文案经 `t()` 翻译，`PluginLanguage` 类型自 `../i18n` 导入（依赖方向 settings → i18n，无环）
+
+### utils（工具）
+
+- 无状态纯函数工具目录，无生命周期，不受模块三段式约束：单文件同时导出函数与类型，无 init 方法
+- `svelte.ts`：`mountComponent(target, Component, props?)` 将 Svelte 组件挂载到目标容器（如视图的 `contentEl`），返回 `{ instance, destroy() }`；destroy 卸载组件并清空容器。组件样式经构建配置 `css: "injected"` 注入 `<head>`，卸载后样式标签残留，但编译期 class 哈希保证样式隔离
+- `ambient.d.ts`：`*.svelte` 模块声明，tsc 层放宽 props 类型，精确类型由 svelte-check 校验（build 命令内执行）；不与 `svelte.ts` 同名——TS 对同名 .ts/.d.ts 只保留 .ts，且模块文件内 `declare module` 会被视为模块增强而非法
+- `.svelte` 组件文件属于模块特有文件，置于所属模块目录下（如 `features/<模块>/components/`），不受三段式约束
 
 ## 代码规范
 

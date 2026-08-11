@@ -6,5 +6,6 @@
   "trailingComma": "all",
   "arrowParens": "always",
   "printWidth": 128,
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "plugins": ["prettier-plugin-svelte"]
 }

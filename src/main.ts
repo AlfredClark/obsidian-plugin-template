@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { initCores } from "./cores";
-import { initFeatures } from "./features";
+import { cleanFeatures, initFeatures } from "./features";
 import type { TemplatePluginSettings } from "./cores/settings";
 
 /**
@@ -21,5 +21,10 @@ export default class TemplatePlugin extends Plugin {
   async onload() {
     await initCores(this);
     await initFeatures(this);
+  }
+
+  /** 插件卸载入口。回收各 feature 注册的资源，避免残留空标签页 */
+  onunload() {
+    cleanFeatures();
   }
 }
