@@ -80,7 +80,7 @@ export class SettingsTab extends PluginSettingTab {
   }
 
   async setControlValue(key: string, value: unknown) {
-    await super.setControlValue(key, value);
+    super.setControlValue(key, value);
     this.update();
   }
 }
