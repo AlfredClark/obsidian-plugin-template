@@ -3,8 +3,8 @@
   "name": "Obsidian Plugin Template",
   "version": "0.1.0",
   "minAppVersion": "1.13.0",
-  "description": "Obsidian plugin development template",
+  "description": "Obsidian plugin development template.",
   "isDesktopOnly": true,
   "author": "Alfred Clark",
-  "authorUrl": "https://github.com/AlfredClark/obsidian-plugin-template"
+  "authorUrl": "https://github.com/AlfredClark"
 }
