@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { subscribeLanguageChange, t, TranslationKey } from "../../i18n";
+  import { subscribeLanguageChange, t, type TranslationKey } from "../../i18n";
   import type { SidebarPage } from "../types";
   import PageOne from "./PageOne.svelte";
   import PageTwo from "./PageTwo.svelte";
