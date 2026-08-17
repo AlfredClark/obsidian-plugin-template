@@ -1,5 +1,6 @@
 import { initI18n } from "./i18n";
 import { initSettings } from "./settings";
+import { initSidebar } from "./sidebar";
 import TemplatePlugin from "../main";
 
 /**
@@ -10,4 +11,5 @@ import TemplatePlugin from "../main";
 export async function initCores(plugin: TemplatePlugin): Promise<void> {
   await initI18n(plugin);
   await initSettings(plugin);
+  await initSidebar(plugin);
 }

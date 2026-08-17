@@ -1,7 +1,7 @@
 import { PluginSettingTab } from "obsidian";
 import type { SettingDefinitionItem } from "obsidian";
 import type { TemplatePluginSettings } from "./types";
-import { t } from "../i18n";
+import { notifyLanguageChange, t } from "../i18n";
 import type TemplatePlugin from "../../main";
 
 /** 设置默认值。data.json 缺失字段时（如旧版本升级）以此为兜底合并 */
@@ -81,6 +81,10 @@ export class SettingsTab extends PluginSettingTab {
 
   setControlValue(key: string, value: unknown) {
     void super.setControlValue(key, value);
+    // 语言切换广播：设置页 update() 只重渲染自身，依赖 t() 的其他 UI（如侧边栏）靠订阅刷新
+    if (key === "language") {
+      notifyLanguageChange();
+    }
     void this.update();
   }
 }
