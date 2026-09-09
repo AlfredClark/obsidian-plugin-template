@@ -102,7 +102,7 @@ For full conventions (naming, module structure, commit rules), see [AGENTS.md](A
 
 ### Add a feature module
 
-1. Create `src/features/<name>/` with the standard three files: `index.ts` (re-exports only), `types.ts` (type definitions), and `core.ts` (logic, exporting `init<Name>()`)
+1. Create `src/features/<name>/` with the standard three files: `index.ts` (re-exports only), `types.ts` (type definitions), and `cores.ts` (logic, exporting `init<Name>()`)
 2. The init function receives the concrete `TemplatePlugin` class via `import type` (no runtime cycles)
 3. If the feature registers resources (views, listeners, etc.), return a cleanup function
 4. Register the init call in `src/features/index.ts` — cleanups are collected there and invoked by `cleanFeatures()` in `onunload()`

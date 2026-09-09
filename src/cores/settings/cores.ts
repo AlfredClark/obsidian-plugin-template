@@ -1,4 +1,4 @@
-import { PluginSettingTab } from "obsidian";
+import { PluginSettingTab, SettingGroupItem } from "obsidian";
 import type { SettingDefinitionItem } from "obsidian";
 import type { TemplatePluginSettings } from "./types";
 import { notifyLanguageChange, t } from "../i18n";
@@ -76,7 +76,29 @@ export class SettingsTab extends PluginSettingTab {
           },
         ],
       },
+      this.buildCollapsibleSection("demo", "Demo Desc", this.getDemoItems()),
     ];
+  }
+
+  /**
+   * 可折叠分组：collapsible 开启时渲染为可导航子页（page），否则内联展开（group）。
+   * 两种容器共用条目，仅容器形态由 collapsible 决定。
+   */
+  private buildCollapsibleSection<K extends string>(
+    name: string,
+    desc: string | undefined,
+    items: SettingGroupItem<K>[],
+  ): SettingDefinitionItem<K> {
+    return this.plugin.settings.collapsible
+      ? { type: "page", name, desc, items }
+      : { type: "group", name, heading: name, items };
+  }
+
+  /**
+   * 获取分组元素，作为 buildCollapsibleSection 的 items 参数传入，每个分组单独定义
+   */
+  private getDemoItems(): SettingGroupItem<keyof TemplatePluginSettings>[] {
+    return [];
   }
 
   setControlValue(key: string, value: unknown) {

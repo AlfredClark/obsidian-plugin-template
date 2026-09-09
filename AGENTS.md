@@ -74,8 +74,8 @@
 - 添加新语言步骤：
   1. 新建 `locales/<标识>.ts`，按 `en.ts` 结构书写并标注 `TranslationResource`（缺失键即编译报错）
   2. `types.ts`：`PluginLanguage`/`SupportedLanguage` 追加语言标识
-  3. `core.ts`：`LOCALES` 注册新资源；`system` 自动判定如需覆盖新语言，补充映射规则
-  4. `settings/core.ts`：下拉框 `options` 追加选项（label 用对应语言本名）
+  3. `cores.ts`：`LOCALES` 注册新资源；`system` 自动判定如需覆盖新语言，补充映射规则
+  4. `settings/cores.ts`：下拉框 `options` 追加选项（label 用对应语言本名）
   5. 所有语言资源的 `languageOptions` 同步追加该语言的本名条目
 - 初始化须在 `initSettings` 之前（其内部 `addSettingTab` 会同步触发设置页渲染，`t()` 依赖 `pluginRef` 已就绪）
 
@@ -83,11 +83,12 @@
 
 - `DEFAULT_SETTINGS` 提供默认值，`loadSettings` 从 data.json 读取后与默认值浅合并（展开运算，避免共享默认对象被意外修改），旧版本缺字段时自动兜底
 - 设置页使用 1.13.0+ 声明式 API（`getSettingDefinitions`），读写 `plugin.settings` 与持久化由 Obsidian 自动完成；覆写 `setControlValue` 触发 `update()` 重渲染，语言切换等联动即时生效
+- 添加分组设置项时，通过定义类似`getDemoItems`的分组专用方法，然后通过`buildCollapsibleSection`添加到`getSettingDefinitions`的返回数组中，以实现通过`collapsible`控制设置项按分组折叠的效果
 - 依赖 i18n 模块：界面文案经 `t()` 翻译，`PluginLanguage` 类型自 `../i18n` 导入（依赖方向 settings → i18n，无环）
 
 ### sidebar（侧边栏）
 
-- 三段式组织；core.ts 导出 `initSidebar(plugin)`，经 cores 聚合层在 initSettings 之后调用（i18n 已就绪，`t()` 可安全求值）；`registerView`/`addRibbonIcon` 由 Obsidian 卸载自动回收，无需清理函数
+- 三段式组织；cores.ts 导出 `initSidebar(plugin)`，经 cores 聚合层在 initSettings 之后调用（i18n 已就绪，`t()` 可安全求值）；`registerView`/`addRibbonIcon` 由 Obsidian 卸载自动回收，无需清理函数
 - `SIDEBAR_VIEW_TYPE` 常量与 `SidebarPage`（"page1" | "page2" | "page3"）位于 types.ts；新增页面时扩展联合类型并在组件切换处追加分支
 - `SidebarView extends ItemView`：`getDisplayText` 与 Ribbon 提示用插件名常量（与 manifest name 一致，不国际化）；`onOpen` 经 `mountComponent` 挂载 Svelte 根组件，`onClose` 回收；`activateSidebar(plugin)` 已有视图叶子则 `revealLeaf` 激活，否则 `getRightLeaf(false)` 新建叶子并打开，仅负责激活不做关闭
 - 组件位于 `components/`：`SidebarRoot.svelte` 以 `$state` 维护 `activePage` 并渲染 tab 按钮栏 + `{#if}` 切换三个占位页面组件（PageOne/Two/Three），tab 与占位文案经 `t()` 翻译；语言切换经 `subscribeLanguageChange` 订阅 + `{#key langTick}` 重建内容块（见 i18n 说明，`activePage` 在块外保留，页面切换不丢）
@@ -106,7 +107,7 @@
 
 1. **命名**：类/接口 PascalCase，函数/变量 camelCase，常量 UPPER_SNAKE_CASE，文件 kebab-case
 2. **类型**：strict 全开（含 `noUncheckedIndexedAccess`）；禁止 `any` 与隐式 any
-3. **模块**：`cores/`（核心能力）与 `features/`（业务功能）下的每个模块均按三段式组织：`index.ts`（统一出口，仅 re-export）、`types.ts`（类型定义）、`core.ts`（核心逻辑，导出 `init<模块>()` 初始化方法）；各模块 init 方法由 `src/cores/index.ts`/`src/features/index.ts` 分别聚合为 `initCores()`/`initFeatures()`，main.ts 各调用一次；init 方法参数一律使用具体类 `TemplatePlugin`，且导入一律为 `import type`（类型层循环在编译期擦除，运行时无循环）；模块特有文件（如 i18n 的 `locales/`）直接置于模块目录下，不受三段式约束
+3. **模块**：`cores/`（核心能力）与 `features/`（业务功能）下的每个模块均按三段式组织：`index.ts`（统一出口，仅 re-export）、`types.ts`（类型定义）、`cores.ts`（核心逻辑，导出 `init<模块>()` 初始化方法）；各模块 init 方法由 `src/cores/index.ts`/`src/features/index.ts` 分别聚合为 `initCores()`/`initFeatures()`，main.ts 各调用一次；init 方法参数一律使用具体类 `TemplatePlugin`，且导入一律为 `import type`（类型层循环在编译期擦除，运行时无循环）；模块特有文件（如 i18n 的 `locales/`）直接置于模块目录下，不受三段式约束
 4. **注释**：中文，写"为什么"而非"是什么"；不做多余注释。导出声明（类/接口/函数/常量/属性）一律使用 JSDoc（`/** */`），内部逻辑用行注释；`@param`/`@returns` 仅在参数或返回值存在需要说明的语义时使用，不机械全量添加；纯 re-export 的 index.ts 无需注释
 5. **约束**：禁止 `import node:*` 与 Electron API（`obsidianmd/no-nodejs-modules` 规则）
 6. **依赖**：确认可 bundle 或需加入 esbuild `external` 列表

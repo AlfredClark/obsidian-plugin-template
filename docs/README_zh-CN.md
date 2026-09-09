@@ -102,7 +102,7 @@ bun run build
 
 ### 新增 feature 模块
 
-1. 创建 `src/features/<名称>/`，包含标准三段式文件：`index.ts`（仅 re-export）、`types.ts`（类型定义）、`core.ts`（核心逻辑，导出 `init<模块>()`）
+1. 创建 `src/features/<名称>/`，包含标准三段式文件：`index.ts`（仅 re-export）、`types.ts`（类型定义）、`cores.ts`（核心逻辑，导出 `init<模块>()`）
 2. init 方法通过 `import type` 接收具体类 `TemplatePlugin`（运行时无循环）
 3. 若功能注册了资源（视图、监听器等），返回清理函数
 4. 在 `src/features/index.ts` 中注册 init 调用 — 清理函数由该文件收集，`onunload()` 时经 `cleanFeatures()` 依序执行
@@ -124,7 +124,7 @@ bun run build
 1. 在 `src/cores/i18n/locales/en.ts` 添加键（类型源）
 2. 在 `src/cores/i18n/locales/zh.ts` 同步镜像（`zh` 与 `zh-TW`）— `TranslationResource` 类型在编译期强制键完全同构
 3. 任意位置使用 `t("键.路径", { 变量 })`，编辑器自动补全
-4. 添加新语言：新建语言资源文件，然后在 `i18n/types.ts`、`i18n/core.ts` 与设置页下拉选项中注册
+4. 添加新语言：新建语言资源文件，然后在 `i18n/types.ts`、`i18n/cores.ts` 与设置页下拉选项中注册
 
 ## 常用命令
 
