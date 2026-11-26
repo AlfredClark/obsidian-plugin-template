@@ -5,7 +5,18 @@ import { parser } from "typescript-eslint";
 import { globalIgnores, defineConfig } from "eslint/config";
 
 export default defineConfig(
-  globalIgnores(["node_modules", "dist", "esbuild.config.ts", "scripts/*.ts", "versions.json", "main.js", "tsconfig.json"]),
+  globalIgnores([
+    "node_modules",
+    "dist",
+    "esbuild.config.ts",
+    "scripts/*.ts",
+    "versions.json",
+    "main.js",
+    "tsconfig.json",
+    "LICENSE",
+    "bun.lock",
+    "**/*.md",
+  ]),
   {
     languageOptions: {
       parserOptions: {
@@ -22,8 +33,8 @@ export default defineConfig(
   ...obsidianmd.configs.recommendedWithLocalesEn,
   ...svelte.configs["flat/recommended"],
   {
-    files: ["package.json"],
-    // package.json 以 json 语言解析（obsidianmd 官方块），无 svelte 解析上下文，
+    files: ["package.json", "manifest.json"],
+    // package.json / manifest.json 以 json 语言解析（obsidianmd 官方块），无 svelte 解析上下文，
     // svelte flat/recommended 中未限定 files 的规则会因 parserServices 缺失而崩溃
     rules: Object.fromEntries(Object.keys(svelte.rules).map((name) => [`svelte/${name}`, "off"])),
   },
