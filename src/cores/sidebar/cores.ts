@@ -2,11 +2,11 @@ import { ItemView } from "obsidian";
 import { SIDEBAR_VIEW_TYPE } from "./types";
 import { mountComponent } from "../../utils/svelte";
 import type { MountedComponent } from "../../utils/svelte";
-import type NovelistsAssistantPlugin from "../../main";
+import type TemplatePlugin from "../../main";
 import SidebarRoot from "./components/SidebarRoot.svelte";
 
 /** 插件名，视图标题与 Ribbon 提示共用；与 manifest.json 的 name 保持一致 */
-const PLUGIN_NAME = "Novelists Assistant";
+const PLUGIN_NAME = "Obsidian Plugin Template";
 
 /**
  * 侧边栏视图。内容全部由 Svelte 根组件渲染，视图仅负责挂载/回收生命周期。
@@ -43,7 +43,7 @@ class SidebarView extends ItemView {
  * 仅负责激活，不做关闭逻辑。
  * @param plugin 插件实例
  */
-async function activateSidebar(plugin: NovelistsAssistantPlugin): Promise<void> {
+async function activateSidebar(plugin: TemplatePlugin): Promise<void> {
   const leaves = plugin.app.workspace.getLeavesOfType(SIDEBAR_VIEW_TYPE);
   const existing = leaves[0];
   if (existing) {
@@ -61,7 +61,7 @@ async function activateSidebar(plugin: NovelistsAssistantPlugin): Promise<void> 
  * 视图与图标由 Obsidian 在插件卸载时自动回收（与 registerView/addRibbonIcon 的文档行为一致）。
  * @param plugin 插件实例
  */
-export async function initSidebar(plugin: NovelistsAssistantPlugin): Promise<void> {
+export async function initSidebar(plugin: TemplatePlugin): Promise<void> {
   plugin.registerView(SIDEBAR_VIEW_TYPE, (leaf) => new SidebarView(leaf));
   plugin.addRibbonIcon("book-open", PLUGIN_NAME, () => void activateSidebar(plugin));
 }

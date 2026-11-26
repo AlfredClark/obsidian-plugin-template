@@ -25,12 +25,12 @@
 </script>
 
 {#key langTick}
-  <div class="novel-sidebar">
-    <nav class="novel-sidebar-tabs">
+  <div class="template-sidebar">
+    <nav class="template-sidebar-tabs">
       {#each TABS as tab (tab.id)}
         <button
           type="button"
-          class="novel-sidebar-tab"
+          class="template-sidebar-tab"
           class:active={activePage === tab.id}
           onclick={() => (activePage = tab.id)}
         >
@@ -38,7 +38,7 @@
         </button>
       {/each}
     </nav>
-    <div class="novel-sidebar-content">
+    <div class="template-sidebar-content">
       {#if activePage === "page1"}
         <PageOne />
       {:else if activePage === "page2"}
@@ -51,20 +51,20 @@
 {/key}
 
 <style>
-  .novel-sidebar {
+  .template-sidebar {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
 
-  .novel-sidebar-tabs {
+  .template-sidebar-tabs {
     display: flex;
     gap: 4px;
     padding: 8px;
     border-bottom: 1px solid var(--background-modifier-border);
   }
 
-  .novel-sidebar-tab {
+  .template-sidebar-tab {
     flex: 1;
     padding: 6px 8px;
     border: none;
@@ -75,16 +75,16 @@
     cursor: pointer;
   }
 
-  .novel-sidebar-tab:hover {
+  .template-sidebar-tab:hover {
     background: var(--background-modifier-hover);
   }
 
-  .novel-sidebar-tab.active {
+  .template-sidebar-tab.active {
     background: var(--background-modifier-active-hover);
     color: var(--text-normal);
   }
 
-  .novel-sidebar-content {
+  .template-sidebar-content {
     flex: 1;
     padding: 12px;
     overflow-y: auto;
